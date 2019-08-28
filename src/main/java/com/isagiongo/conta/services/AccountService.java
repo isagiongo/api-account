@@ -30,6 +30,18 @@ public class AccountService {
     }
 
     public Optional<Account> findById(String id) {
-        return accountRepository.findById(id);  
+        return accountRepository.findById(id);
+    }
+
+    public Account update(String id, Account account) throws Exception {
+        Optional<Account> dbAccount = accountRepository.findById(id);
+        if(!dbAccount.isPresent()) {
+            throw new Exception("Account not found");
+        }
+        Account accountDb = dbAccount.get();
+        accountDb.setNumber(account.getNumber());
+        accountDb.setAgency(account.getAgency());
+        accountDb.setCpf(account.getCpf());
+        return accountRepository.save(accountDb);
     }
 }

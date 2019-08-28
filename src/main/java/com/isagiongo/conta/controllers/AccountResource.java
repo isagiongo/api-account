@@ -35,4 +35,9 @@ public class AccountResource {
     public ResponseEntity<Account> create(@RequestBody Account account) throws Exception {
         return ResponseEntity.ok(accountService.create(account));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Account> update(@PathVariable String id, @RequestBody Account account) throws Exception {
+        return ResponseEntity.ok(accountService.update(id, account));
+    }
 }
