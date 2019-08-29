@@ -1,6 +1,7 @@
 package com.isagiongo.conta.controllers;
 
 import com.isagiongo.conta.entities.Account;
+import com.isagiongo.conta.entities.CreateAccountRequest;
 import com.isagiongo.conta.services.AccountService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,12 +33,18 @@ public class AccountResource {
     }
 
     @PostMapping
-    public ResponseEntity<Account> create(@RequestBody Account account) throws Exception {
+    public ResponseEntity<Account> create(@RequestBody CreateAccountRequest account) throws Exception {
         return ResponseEntity.ok(accountService.create(account));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Account> update(@PathVariable String id, @RequestBody Account account) throws Exception {
         return ResponseEntity.ok(accountService.update(id, account));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable String id) {
+        accountService.delete(id);
+        return ResponseEntity.ok().build();
     }
 }

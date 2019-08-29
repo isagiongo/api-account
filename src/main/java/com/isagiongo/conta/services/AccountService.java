@@ -1,6 +1,7 @@
 package com.isagiongo.conta.services;
 
 import com.isagiongo.conta.entities.Account;
+import com.isagiongo.conta.entities.CreateAccountRequest;
 import com.isagiongo.conta.repositories.AccountRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,15 +15,18 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
 
-    public AccountService(AccountRepository accountRepository) {
+    private final LimitService limitService;
+
+    public AccountService(AccountRepository accountRepository, LimitService limitService) {
         this.accountRepository = accountRepository;
+        this.limitService = limitService;
     }
 
-    public Account create(Account account)throws Exception {
-        if(Objects.isNull(account.getNumber())) {
-            throw new Exception("Account null");
-        }
-        return accountRepository.save(account);
+    public Account create(CreateAccountRequest request)throws Exception {
+        Account account = new Account(request);
+        account = accountRepository.save(account);
+        limitService.createLimit(account.getId());
+        return account;
     }
 
     public Page<Account> findAll(Pageable pageable) {
@@ -43,5 +47,14 @@ public class AccountService {
         accountDb.setAgency(account.getAgency());
         accountDb.setCpf(account.getCpf());
         return accountRepository.save(accountDb);
+    }
+
+    public void delete(String id) {
+        Optional<Account> account = accountRepository.findById(id);
+        if(account.isPresent()) {
+            Account deleteAccount = account.get();
+            deleteAccount.setActive(false);
+            accountRepository.save(deleteAccount);
+        }
     }
 }

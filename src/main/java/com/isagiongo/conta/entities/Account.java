@@ -1,5 +1,6 @@
 package com.isagiongo.conta.entities;
 
+import com.sun.org.apache.bcel.internal.generic.ACONST_NULL;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -26,6 +27,16 @@ public class Account {
     private LocalDate modifyDate;
 
     private Boolean active = true;
+
+    public Account(CreateAccountRequest request) {
+        this.number = request.getNumber();
+        this.agency = request.getAgency();
+        this.cpf = request.getCpf();
+    }
+
+    public Account(){
+
+    }
 
     public String getId() {
         return id;
